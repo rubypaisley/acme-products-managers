@@ -23,10 +23,16 @@ export const getProducts = () => {
 }
 
 export const updateProducts = (id, manager) => {
+    console.log('this should be req.body', manager)
     return dispatch => {
         return axios.put(`/api/products/${id}`, manager)
-            .then(() => axios.get('/api/products'))
-            .then(res => dispatch(getProductsActionCreator(res.data)))
+            .then((product) => {
+                console.log(product.data)
+                return axios.get('/api/products')
+                    .then(res => dispatch(getProductsActionCreator(res.data)))
+            })
+            .catch(er => console.log('oops!' + er))
+
     }
 }
 

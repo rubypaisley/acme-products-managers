@@ -6,6 +6,8 @@ const { Product, User } = require('./db/index').models;
 
 const port = process.env.PORT || 3000;
 
+app.use(express.json())
+
 app.get('/app.js', (req, res, next) => res.sendFile(path.join(__dirname, 'dist', 'main.js')));
 
 app.get('/', (req, res, next) => res.sendFile(path.join(__dirname, 'index.html')));
@@ -32,7 +34,8 @@ app.get('/api/users', (req, res, next) => {
 })
 
 app.put('/api/products/:id', (req, res, next) => {
-    Product.findById(req.params.id)
+    console.log(req.body)
+    Product.findByPk(req.params.id)
         .then(product => product.update(req.body))
         .then(product => res.send(product))
         .catch(next)

@@ -6,9 +6,9 @@ export const Products = (props) => {
     return (
         <ul className="list-group">
             {
-                products.map(product => {
+                products.map(currentProduct => {
                     return (
-                        <SingleProduct product={product} key={product.id} />
+                        <SingleProduct product={currentProduct} key={currentProduct.id} />
                     )
                 })
             }

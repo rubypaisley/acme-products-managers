@@ -11,15 +11,15 @@ class DisconnectedApp extends Component {
         this.props.getProducts();
     }
     render() {
-        const { products, managers } = this.props;
+        const { products, managers, openings } = this.props;
         const managerCount = managers.length;
         return (
 
             <HashRouter>
-                <div>
+                <div className="container">
                     <h1>Acme Products Managers</h1>
                     <Navbar managerCount={managerCount} />
-                    <Route exact path="/" render={() => <div>Homepage</div>} />
+                    <Route exact path="/" render={() => <div>We {openings ? "" : "DON'T"} HAVE openings for product managers!</div>} />
                     <Route path="/products" render={() => <Products products={products} />} />
                     <Route path="/managers" render={() => <Managers managers={managers} />} />
                 </div>
@@ -44,9 +44,11 @@ const mapStateToProps = (state) => {
         }
         return accum;
     }, [])
+    const openings = state.find(product => !product.manager_id)
     return {
         products: state,
-        managers
+        managers,
+        openings
     }
 }
 
