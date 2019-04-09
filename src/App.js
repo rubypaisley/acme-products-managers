@@ -38,15 +38,15 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const mapStateToProps = (state) => {
-    const managers = state.reduce((accum, product) => {
+    const managers = state.products.reduce((accum, product) => {
         if (product.manager && !accum.find(item => item.id === product.managerId)) {
             accum.push(product.manager)
         }
         return accum;
     }, [])
-    const openings = state.find(product => !product.manager_id)
+    const openings = state.products.find(product => !product.manager_id)
     return {
-        products: state,
+        products: state.products,
         managers,
         openings
     }

@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { updateProducts } from './store'
+import { updateProducts, getUsers } from './store'
 import { connect } from 'react-redux'
 
 class DisconnectedSingleProduct extends React.Component {
@@ -8,14 +8,14 @@ class DisconnectedSingleProduct extends React.Component {
         super(props)
         const { product } = this.props;
         this.state = {
-            allManagers: [],
             manager_id: product.manager_id
         }
     }
     componentDidMount() {
-        axios.get('/api/users')
-            .then(users => this.setState({ allManagers: users.data }))
+        this.props.getUsers();
     }
+
+
     handleChange = (evt) => {
         this.setState({ manager_id: evt.target.value })
     }
@@ -25,7 +25,7 @@ class DisconnectedSingleProduct extends React.Component {
         this.props.updateProducts(this.props.product.id, { manager_id })
     }
     render() {
-        const { product } = this.props;
+        const { product, users } = this.props;
         return (
             <li className="list-group-item">
                 <h6>{product.name}</h6>
@@ -33,7 +33,7 @@ class DisconnectedSingleProduct extends React.Component {
                     <label htmlFor="currentManager"><em>Product Manager</em></label>
                     <select className="form-control" name="currentManager" value={this.state.manager_id} onChange={this.handleChange}>
                         <option value="none"> --none-- </option>
-                        {this.state.allManagers.length > 0 ? this.state.allManagers.map(manager => {
+                        {users.length > 0 ? users.map(manager => {
                             return (
                                 <option value={manager.id} key={manager.id}>
                                     {manager.name}
@@ -52,11 +52,18 @@ class DisconnectedSingleProduct extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        updateProducts: (id, manager) => dispatch(updateProducts(id, manager))
+        updateProducts: (id, manager) => dispatch(updateProducts(id, manager)),
+        getUsers: () => dispatch(getUsers())
     }
 }
 
-export const SingleProduct = connect(null, mapDispatchToProps)(DisconnectedSingleProduct)
+const mapStateToProps = (state) => {
+    return {
+        users: state.users
+    }
+}
+
+export const SingleProduct = connect(mapStateToProps, mapDispatchToProps)(DisconnectedSingleProduct)
 
 
 
